@@ -43,7 +43,6 @@ export function LivePlayer({
 
     if (isPlaying && channel) {
       video.play().catch(err => {
-        console.log('[v0] Playback error:', err);
         setError('Failed to play stream');
       });
     } else {

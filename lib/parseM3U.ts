@@ -84,7 +84,6 @@ export async function parseM3UPlaylist(): Promise<Channel[]> {
 
     return Array.from(channels.values());
   } catch (error) {
-    console.error('[v0] Error parsing M3U playlist:', error);
     return [];
   }
 }

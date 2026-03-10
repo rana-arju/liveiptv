@@ -7,6 +7,7 @@ import { Sidebar } from '@/components/Sidebar';
 import { useMemo } from 'react';
 import { getCategoryStats } from '@/lib/parseM3U';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { Channel } from '@/lib/types';
 
 function AppShellInner({ children }: { children: React.ReactNode }) {
   const { 
@@ -47,14 +48,23 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const handleChannelSelect = (channel: Channel) => {
+    playback.playChannel(channel.id);
+    favorites.addToRecent(channel.id);
+    router.push(`/?category=${encodeURIComponent(channel.category || 'Uncategorized')}`);
+  };
+
   return (
     <div className={`flex flex-col h-screen bg-background text-foreground transition-colors duration-300 overflow-hidden ${theme === 'dark' ? 'dark' : ''}`}>
-      <Header 
-        theme={theme} 
-        onToggleTheme={toggleTheme} 
+      <Header
+        theme={theme}
+        onToggleTheme={toggleTheme}
         onToggleSidebar={handleToggleSidebar}
         searchValue={searchQuery}
         onSearchChange={setSearchQuery}
+        channels={channels}
+        onChannelSelect={handleChannelSelect}
+        onCategorySelect={handleCategorySelect}
       />
 
       <div className="flex flex-1 overflow-hidden">
@@ -76,7 +86,7 @@ function AppShellInner({ children }: { children: React.ReactNode }) {
             }}
           />
 
-          <main className="flex-1 overflow-hidden relative">
+          <main className="flex-1 overflow-y-auto relative no-scrollbar">
             {children}
           </main>
         </Suspense>
